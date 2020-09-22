@@ -1,0 +1,17 @@
+version: "3.7"
+
+services:
+  web:
+    image: nginx:1.19.2
+    ports:
+      - 80:80
+    volumes:
+      - ./html:/var/www/html/
+      - ./nginx-config:/etc/nginx/conf.d/
+    links:
+      - php
+
+  php:
+    image: php:7.3-fpm
+    volumes:
+      - ./html:/var/www/html/
