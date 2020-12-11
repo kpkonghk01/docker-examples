@@ -1,4 +1,4 @@
-# Nginx-Php-fpm
+# How to use
 
 ```sh
 docker-compose up
