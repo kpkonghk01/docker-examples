@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  php:
+      build:
+          context: "./php-fpm/"
+          args:
+              PHP_VERSION: ${PHP_VERSION}
+      volumes:
+          - php-config:/usr/local/etc/php/
+      container_name: "${PHP_NAME}"
+
+  apache:
+      image: httpd:${APACHE_VERSION}
+      depends_on:
+          - php
+      ports:
+          - "80:80"
+      volumes:
+          - ./src/:/var/www/html/
+          - apache-config:/usr/local/apache2/conf/
+      container_name: "${APACHE_NAME}"
+
+volumes:
+  php-config:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: './config/php/'
+    external: false
+
+  apache-config:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: './config/apache/'
+    external: false
