@@ -5,20 +5,23 @@ services:
       build:
           context: "./php-fpm/"
           args:
-              PHP_VERSION: ${PHP_VERSION}
+            PHP_VERSION: ${PHP_VERSION}
       volumes:
-          - php-config:/usr/local/etc/php/
+        - ./src/:/var/www/html/
+        - php-config:/usr/local/etc/
       container_name: "${PHP_NAME}"
 
   apache:
       image: httpd:${APACHE_VERSION}
       depends_on:
-          - php
+        - php
+      links:
+        - php
       ports:
-          - "80:80"
+        - "80:80"
       volumes:
-          - ./src/:/var/www/html/
-          - apache-config:/usr/local/apache2/conf/
+        - ./src/:/var/www/html/
+        - apache-config:/usr/local/apache2/conf/
       container_name: "${APACHE_NAME}"
 
 volumes:
