@@ -2,27 +2,34 @@ version: "3.9"
 
 services:
   php:
-      build:
-          context: "./php-fpm/"
-          args:
-            PHP_VERSION: ${PHP_VERSION}
-      volumes:
-        - ./src/:/var/www/html/
-        - php-config:/usr/local/etc/
-      container_name: "${PHP_NAME}"
+    build:
+        context: "./php-fpm/"
+        args:
+          PHP_VERSION: ${PHP_VERSION}
+    environment:
+      - TZ=Asia/Taipei
+    volumes:
+      - ${CODE_PATH}:/var/www/html/
+      - php-config:/usr/local/etc/
+    container_name: "${PHP_NAME}"
+    restart: always
 
   apache:
-      image: httpd:${APACHE_VERSION}
-      depends_on:
-        - php
-      links:
-        - php
-      ports:
-        - "80:80"
-      volumes:
-        - ./src/:/var/www/html/
-        - apache-config:/usr/local/apache2/conf/
-      container_name: "${APACHE_NAME}"
+    image: httpd:${APACHE_VERSION}
+    environment:
+      - TZ=Asia/Taipei
+    depends_on:
+      - php
+    links:
+      - php
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ${CODE_PATH}:/var/www/html/
+      - apache-config:/usr/local/apache2/conf/
+    container_name: "${APACHE_NAME}"
+    restart: always
 
 volumes:
   php-config:
