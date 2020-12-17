@@ -1,0 +1,16 @@
+version: "3.7"
+
+services:
+  php:
+    image: php:7.3-fpm
+    volumes:
+      - ./html:/var/www/html/
+      - ./php-config/custom.ini:/usr/local/etc/php/conf.d/custom.ini
+  apache:
+    image: httpd:2.4-alpine
+    ports:
+      - 3000:3000
+    volumes:
+      - ./html:/usr/local/apache2/htdocs/
+      - ./apache-config/httpd.conf:/usr/local/apache2/conf/httpd.conf
+      - ./apache-config/my-site.conf:/usr/local/apache2/conf/extra/my-site.conf
